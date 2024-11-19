@@ -1,7 +1,7 @@
 echo Exec endpoint.sh
 
-pnpm install
+# pnpm install
 
-# pnpx expo start
+# pnpm run start
 
 sleep infinity
