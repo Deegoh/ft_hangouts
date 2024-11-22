@@ -2,6 +2,8 @@ services:
   app:
     build: .
     volumes:
-      - .:/app
+      - .:/react-app
+    environment:
+      - REACT_NATIVE_PACKAGER_HOSTNAME=${REACTNATIVE_HOST}
     ports:
       - "8081:8081"

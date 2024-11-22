@@ -1,7 +1,10 @@
 echo Exec endpoint.sh
 
-# pnpm install
+# yarn expo install expo@latest
+# yarn expo install --fix
 
-# pnpm run start
+# yarn install
+
+# yarn run start
 
 sleep infinity
