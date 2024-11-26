@@ -5,7 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function ContactsScreen() {
   const { id } = useLocalSearchParams();
 
-  const backHandle = () => {
+  const backHandle: () => void = () => {
     router.back();
   };
 
