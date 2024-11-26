@@ -1,20 +1,42 @@
-import { useLocalSearchParams, useNavigation } from "expo-router";
-import { useEffect } from "react";
-import { View, Text } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { View, Text, StyleSheet, Pressable } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ContactsScreen() {
-    const {id} = useLocalSearchParams();
-    const navigation = useNavigation();
+  const { id } = useLocalSearchParams();
 
-    useEffect(() => {
-        navigation.setOptions({headerShown: false});
-    }, [navigation])
-    
-    return (
-        <View>
-            <Text>
-                Hello contact {id}
-            </Text>
-        </View>
-    );
+  const backHandle = () => {
+    router.back();
+  };
+
+  return (
+    <SafeAreaView style={styles.contrainer}>
+      <View style={styles.header}>
+        <Pressable onPress={backHandle}>
+          <Text>Back</Text>
+        </Pressable>
+      </View>
+      <View style={styles.main}>
+        <Text>Hello contact {id}</Text>
+      </View>
+    </SafeAreaView>
+  );
 }
+
+const styles = StyleSheet.create({
+  contrainer: {
+    flex: 1,
+    alignItems: "center",
+  },
+  header: {
+    height: 40,
+    alignSelf: "stretch",
+    justifyContent: "center",
+    backgroundColor: "blue",
+  },
+  main: {
+    flex: 1,
+    justifyContent: "center",
+    backgroundColor: "red",
+  },
+});
