@@ -2,7 +2,7 @@ import { router, useLocalSearchParams } from "expo-router";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function ContactsScreen() {
+export const ContactsScreen = () => {
   const { id } = useLocalSearchParams();
 
   const backHandle: () => void = () => {
@@ -40,3 +40,5 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
   },
 });
+
+export default ContactsScreen;

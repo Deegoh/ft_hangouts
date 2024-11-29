@@ -1,14 +1,7 @@
 import { Link, useNavigation } from "expo-router";
-import { useEffect } from "react";
 import { Text, View } from "react-native";
 
-export default function Index() {
-
-  const navigation = useNavigation();
-
-  useEffect(()=>{
-    navigation.setOptions({headerShown: false});
-  }, [navigation])
+export const Index = () => {
 
   return (
     <View
@@ -28,3 +21,5 @@ export default function Index() {
     </View>
   );
 }
+
+export default Index;
