@@ -1,41 +1,28 @@
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import React from "react";
-import { Platform } from 'react-native';
+import { Text, useColorScheme } from "react-native";
+import { SQLiteProvider } from 'expo-sqlite';
+import { Suspense } from 'react';
 
 
-export const RootLayout = () => {
+const RootLayout = () => {
 
-  if (Platform.OS === 'web') {
-    return (
-      <>
-        <Stack screenOptions={{ headerShown: false }} />
-        <StatusBar style="dark" />
-      </>
-    );
-  }
-
-  const SQLite = require('expo-sqlite');
+  const colorTheme = useColorScheme() ?? "dark";
 
   return (
-    <SQLite.SQLiteProvider databaseName="ft_hangouts.db">
-      <Stack screenOptions={{ headerShown: false }} />
-      <StatusBar style="dark" />
-    </SQLite.SQLiteProvider>
+    <>
+      <Suspense fallback={<Text>Loading...</Text>}>
+        <SQLiteProvider databaseName="ft_hangouts.db" useSuspense={true}>
+          <Stack>
+            <Stack.Screen name={"index"} options={{headerShown: false}} />
+            <Stack.Screen name={"add"} options={{title: "Contacts - Add contact"}} />
+          </Stack>
+          <StatusBar style={colorTheme} />
+        </SQLiteProvider>
+      </Suspense>
+    </>
   );
 }
 
-async function migrateDbIfNeeded(db: any) {
-  await db.execAsync(`
-    PRAGMA journal_mode = WAL;
-    CREATE TABLE IF NOT EXISTS contacts (
-        id INTEGER PRIMARY KEY NOT NULL,
-        firstName TEXT NOT NULL,
-        name TEXT,
-        phone TEXT NOT NULL,
-        imageURI TEXT
-        );
-  `);
-}
 
 export default RootLayout;
