@@ -15,7 +15,7 @@ const RootLayout = () => {
         <SQLiteProvider databaseName="ft_hangouts.db" useSuspense={true}>
           <Stack>
             <Stack.Screen name={"index"} options={{headerShown: false}} />
-            <Stack.Screen name={"add"} options={{title: "Contacts - Add contact"}} />
+            <Stack.Screen name={"contacts/add"} options={{title: "Contacts - Add contact"}} />
           </Stack>
           <StatusBar style={colorTheme} />
         </SQLiteProvider>

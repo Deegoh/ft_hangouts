@@ -1,19 +1,24 @@
 import { Link, router } from "expo-router";
 import { StyleSheet, Pressable, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useSQLiteContext } from "expo-sqlite";
+import { Database } from "@/db/Database"
 
 const Index = () => {
 
-  const db = useSQLiteContext();
-
+  const db = new Database();
   return (
     <SafeAreaView style={styles.container}>
       <Pressable style={[styles.btn]} onPress={()=> {
-        // console.log('sqlite version', db.getFirstSync('SELECT sqlite_version()'));
-        console.log('sqlite version', db.getFirstSync('PRAGMA database_list;'));
-      }}>
+          db.createTables();
+        }}>
         <Text style={styles.text}>show db</Text>
+      </Pressable>
+
+      <Pressable style={[styles.btn]} onPress={()=> {
+        console.log("get contacts");
+        db.getList("contacts").then((rows) => {console.log(rows)});
+      }}>
+        <Text style={styles.text}>Get Contacts</Text>
       </Pressable>
 
       <Pressable style={[styles.btn]}>
@@ -22,7 +27,7 @@ const Index = () => {
         </Link>
       </Pressable>
 
-      <Pressable onPress={() => router.push("/add")} style={[styles.btn]}>
+      <Pressable onPress={() => router.push("/contacts/add")} style={[styles.btn]}>
         <Text style={styles.text}>Add contact</Text>
       </Pressable>
     </SafeAreaView>
