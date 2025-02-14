@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Pressable, TextInput, Text, StyleSheet, View } from "react-native";
 import { Database } from "@/db/Database";
 import { Contact } from "@/types/contact"
+import { useSQLiteContext } from "expo-sqlite";
 
 const add = () => {
   const [contact, setContact] = useState<Contact>({
@@ -13,7 +14,7 @@ const add = () => {
     img: ""});
 
   const router = useRouter();
-  const db = new Database();
+  const db = new Database(useSQLiteContext());
 
   const handleFirstNameChange = (value: any) => {
     setContact({...contact, firstName: value});
@@ -31,13 +32,12 @@ const add = () => {
     setContact({...contact, img: value});
   }
 
-  const addContactHandle = () => {
-    console.log(contact);
-
-    db.addContact(contact).then(
-      () => {
-        console.log("contact added");
-      });
+  const addContactHandle = async () => {
+    db.addContact(contact).then((res) => {
+      console.info("contact added", res.lastInsertRowId, res.changes);
+    }).catch((err) => {
+      console.error(err);
+    });
     router.back();
   };
 
@@ -58,12 +58,14 @@ const add = () => {
       <TextInput
         style={styles.input}
         placeholder="phone"
+        keyboardType={"phone-pad"}
         value={contact.phone}
         onChangeText={handlePhoneChange} />
 
       <TextInput
         style={styles.input}
         placeholder="email"
+        keyboardType={"email-address"}
         value={contact.email}
         onChangeText={handleEmailChange} />
 
