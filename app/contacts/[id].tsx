@@ -1,9 +1,11 @@
 import { router, useLocalSearchParams, Stack } from "expo-router";
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import {useContact} from "@/hooks/useContact";
 
 const ContactsScreen = () => {
-  const { id } = useLocalSearchParams();
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const [contact] = useContact(id);
 
   const backHandle: () => void = () => {
     router.back();
@@ -12,14 +14,14 @@ const ContactsScreen = () => {
   return (
     <>
       <Stack.Screen options={{ headerShown: false }}/>
-      <SafeAreaView style={styles.contrainer}>
+      <SafeAreaView style={styles.container}>
         <View style={styles.header}>
           <Pressable onPress={backHandle}>
             <Text>Back</Text>
           </Pressable>
         </View>
         <View style={styles.main}>
-          <Text>Hello contact {id}</Text>
+          <Text>Hello {contact?.firstName} {id}</Text>
         </View>
       </SafeAreaView>
     </>
@@ -27,7 +29,7 @@ const ContactsScreen = () => {
 }
 
 const styles = StyleSheet.create({
-  contrainer: {
+  container: {
     flex: 1,
     alignItems: "center",
   },

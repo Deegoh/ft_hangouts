@@ -35,10 +35,10 @@ const add = () => {
   const addContactHandle = async () => {
     db.addContact(contact).then((res) => {
       console.info("contact added", res.lastInsertRowId, res.changes);
+      router.push("/");
     }).catch((err) => {
       console.error(err);
     });
-    router.back();
   };
 
   return (
