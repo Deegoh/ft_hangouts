@@ -55,6 +55,13 @@ export class Database {
     await this.db.execAsync(`PRAGMA user_version = ${DATABASE_VERSION}`);
   }
 
+  async getTables() {
+    if (!this.db) {
+      throw new Error("Set DB first");
+    }
+    await this.db.getAllAsync(`SELECT * FROM sqlite_master where type='table'`)
+  }
+
   async resetDB() {
     if (!this.db) {
       throw new Error("Set DB first");
@@ -65,23 +72,35 @@ export class Database {
     DROP TABLE IF EXISTS messages;`);
   }
 
-  async getList(table: string) {
+  async getList(table: string) : Promise<Contact[]> {
     if (!this.db) {
       throw new Error("Set DB first");
     }
     if (!this.tables.includes(table)) {
       throw new Error("Invalid table");
     }
-
     return await this.db.getAllAsync(`SELECT * FROM ${table}`);
+  }
+
+  async getContact(id: string) : Promise<Contact | null> {
+    if (!this.db) {
+      throw new Error("Set DB first");
+    }
+    if (!id) {
+      throw new Error("id is required");
+    }
+    return await this.db.getFirstAsync(`SELECT * FROM contacts WHERE id = ?`, id);
   }
 
   async addContact(contact: Contact) {
     if (!this.db) {
       throw new Error("Set DB first");
     }
-    if (contact.firstName === "" || contact.phone === "") {
-      throw new Error("Invalid contact");
+    if (contact.firstName === "") {
+      throw new Error("Invalid first name ");
+    }
+    if (contact.phone === "") {
+      throw new Error("Invalid phone");
     }
 
     const columns: string[] = [];
@@ -100,4 +119,7 @@ export class Database {
       `INSERT INTO contacts (${columns.join(', ')}) VALUES (${placeholders})`, values
     );
   }
+
+  async editContact(contact: Contact) {}
+  async deleteContact(contact: Contact) {}
 }
