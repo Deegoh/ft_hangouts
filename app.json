@@ -7,6 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+//    "newArchEnabled": false,
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
@@ -15,7 +16,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.deegoh.ft_hangouts"
     },
     "web": {
       "bundler": "metro",
@@ -38,6 +40,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "37da08c3-18b8-4e64-9721-e26876180644"
+      }
+    },
+    "owner": "deegoh"
   }
 }

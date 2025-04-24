@@ -1,7 +1,8 @@
 import {Link} from "expo-router";
 import {Image, Pressable, StyleSheet, Text, View} from "react-native";
 import {Contact} from "@/types/contact";
-import {generateColor} from "@/utils/Color";
+import {adjustColor} from "@/utils/Color";
+import { Colors } from "@/constants/Colors";
 
 const FlatListItems = ({item}: {item: Contact}) => {
 
@@ -13,12 +14,24 @@ const FlatListItems = ({item}: {item: Contact}) => {
     return str.charAt(0).toUpperCase();
   }
 
+  function sumCharacters(str: string): number {
+    return str.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  }
+
   const firstLetter = getFirstLetterUpperCase(item.firstName);
-  const hexColor = generateColor(firstLetter, item.phone);
+  const phone = parseInt(item.phone.replace(/\s/g, ''))
+  let bright = phone % 40;
+  if (phone % 2) {
+    bright = -bright;
+  }
+  const hexColor = adjustColor(Colors['light'].iconColors[sumCharacters(item.firstName) % 5], bright);
 
   return (
     <Pressable>
-      <Link href={`/contacts/${item.id}`}>
+      <Link href={{
+        pathname: '/contacts/(tabs)/(message)/[id]',
+        params: { id: item.id ?? "0" }
+      }}>
         <View style={styles.container}>
 
           {item.img ? (
@@ -43,7 +56,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flex: 1,
     flexDirection: "row",
-    paddingBottom: 16,
+    paddingBottom: 12,
     alignItems: "center",
   },
   capitalLetter: {

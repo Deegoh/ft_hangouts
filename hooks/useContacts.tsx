@@ -10,13 +10,13 @@ export const useContacts = (setIsLoading: React.Dispatch<React.SetStateAction<bo
 
   const getContactsList = async () => {
     await db.getList("contacts").then((contacts) => {
-      const emptyContact = {} as Contact
+      const emptyContact: Contact = {} as Contact;
+      contacts.push(emptyContact);
       setContacts(contacts);
-      setContacts((prev) => [...prev, emptyContact]);
-      console.log(contacts)
-      setIsLoading(false);
     }).catch((err) => {
       console.error(err);
+    }).finally(() => {
+      setIsLoading(false);
     });
   };
 

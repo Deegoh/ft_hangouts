@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import {StyleSheet, Pressable, Text, View} from "react-native";
+import {StyleSheet, Pressable, Text, View, TextInput} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Database } from "@/db/Database"
 import {useSQLiteContext} from "expo-sqlite";
@@ -7,27 +7,47 @@ import {useState} from "react";
 import FlatListItems from "@/components/FlatListItems";
 import {FlashList} from "@shopify/flash-list";
 import {useContacts} from "@/hooks/useContacts";
+import Header from "@/components/Header";
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 const Index = () => {
   const db = new Database(useSQLiteContext());
   const [isLoading, setIsLoading] = useState(true);
   const {contacts} = useContacts(setIsLoading);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const [isDevMode, setIsDevMode] = useState(false)
+
+  const contactsFiltered = contacts.filter(contact =>
+    String(contact.firstName).toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
   <SafeAreaView style={styles.container}>
+
+    <Header title="Contacts">
+      <Pressable onPress={()=>{router.push("/")}}>
+        <MaterialIcons name="menu" size={24} color="black" />
+      </Pressable>
+    </Header>
+
+    <TextInput
+      style={styles.input}
+      placeholder="Search"
+      value={searchTerm}
+      onChangeText={setSearchTerm}/>
+
     <View style={styles.view}>
       {isLoading ? (<Text>Loading...</Text>) : (
-        <FlashList data={contacts} estimatedItemSize={200} renderItem={FlatListItems}/>
+        <FlashList data={contactsFiltered} estimatedItemSize={200} renderItem={FlatListItems}/>
       )}
       <Pressable style={[styles.add, {left: 20}]} onPress={() => setIsDevMode(!isDevMode)} >
         <Text style={styles.plus}>?</Text>
       </Pressable>
       <Pressable style={styles.add} onPress={() => router.push("/contacts/add")} >
-        <Text style={styles.plus}>+</Text>
+        <Text style={styles.plus}><FontAwesome6 name="user-plus" size={24} color="white" /></Text>
       </Pressable>
     </View>
-
 
     {isDevMode && (
       <View style={styles.view}>
@@ -61,7 +81,8 @@ const Index = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 8,
+    paddingHorizontal: 16,
+    gap: 16,
   },
   view: {
     flex: 1,
@@ -75,7 +96,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     padding: 20,
     backgroundColor: "#CCC",
-    // borderRadius: 50,
   },
   add: {
     position: "absolute",
@@ -87,6 +107,13 @@ const styles = StyleSheet.create({
     backgroundColor: "blue",
     alignItems: "center",
     justifyContent: "center",
+  },
+  input: {
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: "#CCC",
+    backgroundColor: "#fff",
+    marginBottom: 8,
   },
   plus: {
     color: "white",

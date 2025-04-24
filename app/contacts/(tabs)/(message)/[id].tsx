@@ -8,7 +8,7 @@ const ContactsScreen = () => {
   const [contact] = useContact(id);
 
   const backHandle: () => void = () => {
-    router.back();
+    router.push("/");
   };
 
   return (
@@ -37,12 +37,12 @@ const styles = StyleSheet.create({
     height: 40,
     alignSelf: "stretch",
     justifyContent: "center",
-    backgroundColor: "blue",
+    // backgroundColor: "blue",
   },
   main: {
-    flex: 1,
+    // flex: 1,
     justifyContent: "center",
-    backgroundColor: "red",
+    // backgroundColor: "red",
   },
 });
 

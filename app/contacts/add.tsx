@@ -1,9 +1,13 @@
-import { useRouter } from "expo-router";
+import {SafeAreaView} from "react-native-safe-area-context";
+import {useRouter} from "expo-router";
 import { useState } from "react";
-import { Pressable, TextInput, Text, StyleSheet, View } from "react-native";
+import {Pressable, Text, StyleSheet, View} from "react-native";
+import { useSQLiteContext } from "expo-sqlite";
 import { Database } from "@/db/Database";
 import { Contact } from "@/types/contact"
-import { useSQLiteContext } from "expo-sqlite";
+import ContactForm from "@/components/ContactForm";
+import Header from "@/components/Header";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 const add = () => {
   const [contact, setContact] = useState<Contact>({
@@ -16,22 +20,6 @@ const add = () => {
   const router = useRouter();
   const db = new Database(useSQLiteContext());
 
-  const handleFirstNameChange = (value: any) => {
-    setContact({...contact, firstName: value});
-  }
-  const handleLastNameChange = (value: any) => {
-    setContact({...contact, lastName: value});
-  }
-  const handleEmailChange = (value: any) => {
-    setContact({...contact, email: value});
-  }
-  const handlePhoneChange = (value: any) => {
-    setContact({...contact, phone: value});
-  }
-  const handleImgChange = (value: any) => {
-    setContact({...contact, img: value});
-  }
-
   const addContactHandle = async () => {
     db.addContact(contact).then((res) => {
       console.info("contact added", res.lastInsertRowId, res.changes);
@@ -42,58 +30,34 @@ const add = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="firstName"
-        value={contact.firstName}
-        onChangeText={handleFirstNameChange}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="lastName"
-        value={contact.lastName}
-        onChangeText={handleLastNameChange} />
+    <SafeAreaView style={styles.container}>
 
-      <TextInput
-        style={styles.input}
-        placeholder="phone"
-        keyboardType={"phone-pad"}
-        value={contact.phone}
-        onChangeText={handlePhoneChange} />
+      <Header onBack={()=>router.back()} title="Create contact">
+        <Pressable onPress={()=>{router.push("/")}}>
+          <MaterialIcons name="menu" size={24} color="black" />
+        </Pressable>
+      </Header>
 
-      <TextInput
-        style={styles.input}
-        placeholder="email"
-        keyboardType={"email-address"}
-        value={contact.email}
-        onChangeText={handleEmailChange} />
-
-
-      <TextInput
-        style={styles.input}
-        placeholder="img"
-        value={contact.img}
-        onChangeText={handleImgChange}
-      />
-      <Pressable onPress={addContactHandle} style={styles.btn}>
-        <Text style={styles.txt}>Add contact</Text>
-      </Pressable>
-    </View>
+      <View style={styles.main}>
+        <ContactForm contact={contact} setContact={setContact} />
+        <Pressable onPress={addContactHandle} style={styles.btn}>
+          <Text style={styles.txt}>Add contact</Text>
+        </Pressable>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 16,
     flex: 1,
-    justifyContent: "space-around",
+    paddingHorizontal: 16,
+    gap: 16,
   },
-  input: {
-    borderRadius: 10,
-    borderWidth: 1,
-    borderColor: "#CCC",
-    backgroundColor: "#fff",
+  main:{
+    flex: 1,
+    paddingBottom: 32,
+    justifyContent: "space-between",
   },
   btn: {
     padding: 8,

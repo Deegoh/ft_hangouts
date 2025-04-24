@@ -79,7 +79,7 @@ export class Database {
     if (!this.tables.includes(table)) {
       throw new Error("Invalid table");
     }
-    return await this.db.getAllAsync(`SELECT * FROM ${table}`);
+    return await this.db.getAllAsync(`SELECT * FROM ${table} ORDER BY firstName ASC`);
   }
 
   async getContact(id: string) : Promise<Contact | null> {
@@ -120,6 +120,39 @@ export class Database {
     );
   }
 
-  async editContact(contact: Contact) {}
-  async deleteContact(contact: Contact) {}
+  async editContact(contact: Contact) {
+    if (!this.db) {
+      throw new Error("Set DB first");
+    }
+    if (!contact.id) {
+      throw new Error("Invalid id");
+    }
+
+    const columns: string[] = [];
+    const values: string[] = [];
+
+    for (const key in contact) {
+      if (contact[key] !== "") {
+        columns.push(`${key} = ?`);
+        values.push(contact[key]);
+      }
+    }
+
+    values.push(String(contact.id));
+
+    return await this.db.runAsync(
+      `UPDATE contacts SET ${columns.join(', ')} WHERE id = ?`, values
+    );
+  }
+  async deleteContact(id: string) {
+    if (!this.db) {
+      throw new Error("Set DB first");
+    }
+    if (!id) {
+      throw new Error("Invalid id");
+    }
+    return await this.db.runAsync(
+      `DELETE FROM contacts WHERE id = ?`, id
+    );
+  }
 }
